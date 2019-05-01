@@ -1,0 +1,32 @@
+# https://github.com/miwurster/spring-data-influxdb/blob/master/.docker/docker-compose.yml
+
+version: '2'
+services:
+  influxdb:
+    image: influxdb:1.5
+    restart: always
+    ports:
+      - 8086:8086
+      # influxdb 1.3 부터 어드민 페이지 지원 안함
+      # https://docs.influxdata.com/influxdb/v1.5/tools/web_admin/
+    networks:
+      - project-metrics
+  grafana:
+    image: grafana/grafana:5.4.3
+    restart: always
+    ports:
+      - 3000:3000
+    networks:
+      - project-metrics
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_SECURITY_DISABLE_GRAVATAR=true
+      - GF_USERS_ALLOW_SIGN_UP=false
+    depends_on:
+      - influxdb
+    links:
+    - influxdb:influxdb
+
+networks:
+  project-metrics:
