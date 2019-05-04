@@ -1,1 +1,10 @@
-
+management:
+  endpoints:
+    web:
+      exposure:
+        include: metrics
+  metrics:
+    export:
+      influx:
+        uri: http://localhost:8086
+        db: test
